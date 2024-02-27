@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">G7_MealApp</string>
+    <string name="title_home">Let\'s get cooking</string>
+    <string name="title_search">Find best recipes for cooking</string>
+    <string name="title_aboutus">About us</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="about_us">About us</string>
+</resources>
