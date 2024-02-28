@@ -18,4 +18,12 @@
     <string name="no_internet">You have no internet connection</string>
     <string name="network_error">Unable to resolve host</string>
     <string name="network_connect">Failed to connect</string>
+    <string name="meal_name">Meal Name</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="procedure">Procedure</string>
+    <string name="procedure_description">Procedure description</string>
+    <string name="ingredient_name">Ingredient Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="category">Category</string>
+    <string name="area">Area</string>
 </resources>
