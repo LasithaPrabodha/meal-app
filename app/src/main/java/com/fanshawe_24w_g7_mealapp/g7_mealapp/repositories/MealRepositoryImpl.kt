@@ -1,6 +1,7 @@
 package com.fanshawe_24w_g7_mealapp.g7_mealapp.repositories
 
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.CategoryResponse
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealDetailResponse
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealResponse
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import retrofit2.Response
@@ -20,6 +21,11 @@ class MealRepositoryImpl(private val service: MealService): MealRepository {
     @JvmSuppressWildcards
     override suspend fun getCategoryMeals(categoryName: String): Response<MealResponse> {
         return service.getCategoryMeals(categoryName)
+    }
+
+    @JvmSuppressWildcards
+    override suspend fun getMealDetail(mealId: String): Response<MealDetailResponse> {
+        return service.getMealDetail(mealId)
     }
 
 

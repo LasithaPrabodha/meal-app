@@ -12,4 +12,12 @@
     <string name="popular_category">Popular category</string>
     <string name="recently_checked">Recently checked</string>
     <string name="recently_checked_meal">Recently checked meal</string>
+    <string name="meal_name">Meal Name</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="procedure">Procedure</string>
+    <string name="procedure_description">Procedure description</string>
+    <string name="ingredient_name">Ingredient Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="category">Category</string>
+    <string name="area">Area</string>
 </resources>

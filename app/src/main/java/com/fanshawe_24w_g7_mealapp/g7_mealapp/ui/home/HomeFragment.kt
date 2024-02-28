@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.R
@@ -20,7 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
 
-    val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -71,6 +72,11 @@ class HomeFragment : Fragment() {
             )
         )
         val adapter = RecentlyCheckedMealsAdapter(meals)
+
+        adapter.setOnclickListener { clickedMeal ->
+            findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(clickedMeal.idMeal))
+        }
+
         binding.recentlyCheckedMeals.adapter = adapter
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

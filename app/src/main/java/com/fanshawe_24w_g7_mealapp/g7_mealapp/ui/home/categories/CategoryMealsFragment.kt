@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentCategoryItemsBinding
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Category
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.HomeFragmentDirections
 import kotlinx.coroutines.launch
 
 
@@ -49,6 +51,10 @@ class CategoryMealsFragment : Fragment() {
                 recyclerDataArrayList?.let {meals->
 
                     val adapter = CategoryMealsAdapter(meals)
+
+                    adapter.setOnclickListener { clickedMeal ->
+                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(clickedMeal.idMeal))
+                    }
 
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

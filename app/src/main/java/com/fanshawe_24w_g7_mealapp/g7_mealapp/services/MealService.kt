@@ -1,6 +1,7 @@
 package com.fanshawe_24w_g7_mealapp.g7_mealapp.services
 
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.CategoryResponse
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealDetailResponse
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,4 +16,7 @@ interface MealService {
 
     @GET("filter.php")
     suspend fun getCategoryMeals(@Query("c") categoryName: String): Response<MealResponse>
+
+    @GET("lookup.php")
+    suspend fun getMealDetail(@Query("i") mealId: String): Response<MealDetailResponse>
 }
