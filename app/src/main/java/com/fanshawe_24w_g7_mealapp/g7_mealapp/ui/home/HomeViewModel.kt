@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Category
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
-import com.fanshawe_24w_g7_mealapp.g7_mealapp.repositories.MealRepository
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: MealRepository
+    private val service: MealService
 ) : ViewModel() {
 
     private val _mealOfTheDay = MutableLiveData<Meal>()
@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
             if(_mealOfTheDay.value != null) return@launch
 
             try {
-                val response = repository.getRandomMeal()
+                val response = service.getRandomMeal()
                 if (response.isSuccessful) {
                     _mealOfTheDay.value = response.body()?.meals?.first()
                 } else {
@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor(
     fun getCategories(){
         viewModelScope.launch {
             try {
-                val response = repository.getCategories()
+                val response = service.getCategories()
                 if (response.isSuccessful) {
                     _categories.value = response.body()?.categories ?: emptyList<Category>()
                 } else {

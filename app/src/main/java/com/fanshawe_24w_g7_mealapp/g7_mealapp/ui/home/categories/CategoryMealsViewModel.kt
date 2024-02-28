@@ -3,13 +3,13 @@ package com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.categories
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
-import com.fanshawe_24w_g7_mealapp.g7_mealapp.repositories.MealRepository
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryMealsViewModel @Inject constructor(
-    private val repository: MealRepository
+    private val service: MealService
 ) : ViewModel() {
 
     private val _categoryMeals = HashMap<String, Array<Meal>?>()
@@ -21,7 +21,7 @@ class CategoryMealsViewModel @Inject constructor(
         }
         Log.e("VM", _categoryMeals[categoryName].toString())
         try {
-            val response = repository.getCategoryMeals(categoryName)
+            val response = service.getCategoryMeals(categoryName)
             return if (response.isSuccessful) {
                 _categoryMeals[categoryName] = response.body()?.meals?.toTypedArray()
                 _categoryMeals[categoryName]
