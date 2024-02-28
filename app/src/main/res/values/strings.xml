@@ -6,4 +6,10 @@
     <string name="home">Home</string>
     <string name="search">Search</string>
     <string name="about_us">About us</string>
+    <string name="todays_special">Today\'s Special 🥗</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="popular_category">Popular category</string>
+    <string name="recently_checked">Recently checked</string>
+    <string name="recently_checked_meal">Recently checked meal</string>
 </resources>
