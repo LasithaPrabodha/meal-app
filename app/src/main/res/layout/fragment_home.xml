@@ -15,7 +15,7 @@
 
 
         <TextView
-            android:id="@+id/todaysSpecialTxt"
+            android:id="@+id/txt_todays_special"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/todays_special"
@@ -25,16 +25,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/todaysSpecialCard"
+            android:id="@+id/card_todays_special"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="@dimen/regular_margin"
             app:cardCornerRadius="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/todaysSpecialTxt">
+            app:layout_constraintTop_toBottomOf="@+id/txt_todays_special">
 
             <ImageView
-                android:id="@+id/todaysSpecialImg"
+                android:id="@+id/img_todays_special"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -47,7 +47,7 @@
                 android:background="@drawable/gradient">
 
                 <TextView
-                    android:id="@+id/specialMealName"
+                    android:id="@+id/txt_todays_special_mealname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -64,55 +64,55 @@
 
 
         <TextView
-            android:id="@+id/popCatTitle"
+            android:id="@+id/txt_popular_category_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/popular_category"
             android:textSize="@dimen/activity_subheading"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/todaysSpecialCard" />
+            app:layout_constraintTop_toBottomOf="@+id/card_todays_special" />
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabCategories"
+            android:id="@+id/tab_categories"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/tab_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/popCatTitle"
+            app:layout_constraintTop_toBottomOf="@id/txt_popular_category_title"
             app:tabGravity="center"
             app:tabIndicatorHeight="0dp"
             app:tabMode="scrollable"
             app:tabRippleColor="@null" />
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/mealsInCategories"
+            android:id="@+id/viewp_meals_in_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/tabCategories">
+            app:layout_constraintTop_toBottomOf="@+id/tab_categories">
 
         </androidx.viewpager2.widget.ViewPager2>
 
 
         <TextView
-            android:id="@+id/recentlyCheckedTxt"
+            android:id="@+id/txt_recently_checked"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/recently_checked"
             android:textSize="@dimen/activity_subheading"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/mealsInCategories" />
+            app:layout_constraintTop_toBottomOf="@+id/viewp_meals_in_categories" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="16dp"
-            android:id="@+id/recentlyCheckedMeals"
+            android:id="@+id/rv_recently_checked_meals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/recentlyCheckedTxt">
+            app:layout_constraintTop_toBottomOf="@+id/txt_recently_checked">
 
         </androidx.recyclerview.widget.RecyclerView>
 
