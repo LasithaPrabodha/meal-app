@@ -18,8 +18,8 @@ class CategoryMealsAdapter (private val dataSet: Array<Meal>) :
         val image: ImageView
 
         init {
-            title = view.findViewById(R.id.catItemTitle)
-            image = view.findViewById(R.id.categoryItemImage)
+            title = view.findViewById(R.id.txt_meal_title)
+            image = view.findViewById(R.id.img_category_meal)
         }
     }
 
@@ -32,7 +32,8 @@ class CategoryMealsAdapter (private val dataSet: Array<Meal>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.title.text = dataSet[position].strMeal
-        viewHolder.image.load(dataSet[position].strMealThumb)
+        viewHolder.image.load(dataSet[position].strMealThumb) {
+        }
     }
 
     override fun getItemCount() = dataSet.size

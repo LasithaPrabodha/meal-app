@@ -15,11 +15,9 @@ class CategoryMealsViewModel @Inject constructor(
     private val _categoryMeals = HashMap<String, Array<Meal>?>()
 
     suspend fun loadItemInCategory(categoryName: String): Array<Meal>? {
-        Log.e("VM", _categoryMeals[categoryName].toString())
         _categoryMeals[categoryName]?.let {
             return _categoryMeals[categoryName]
         }
-        Log.e("VM", _categoryMeals[categoryName].toString())
         try {
             val response = service.getCategoryMeals(categoryName)
             return if (response.isSuccessful) {
@@ -29,7 +27,7 @@ class CategoryMealsViewModel @Inject constructor(
                 // Handle error
                 Log.e(
                     "CategoryItemsViewModel",
-                    "Error when loading meals for ${categoryName}: ${response.code()}"
+                    "Error when fetching meals for ${categoryName}: ${response.code()}"
                 )
                 null
             }

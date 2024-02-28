@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
                     _mealOfTheDay.value = response.body()?.meals?.first()
                 } else {
                     // Handle error
-                    Log.e("HomeViewModel", "Error when loading meal of the day: ${response.code()}")
+                    Log.e("HomeViewModel", "Error when fetching meal of the day: ${response.code()}")
                 }
             } catch (e: Exception) {
                 // Handle network or other exceptions
@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
                     _categories.value = response.body()?.categories ?: emptyList<Category>()
                 } else {
                     // Handle error
-                    Log.e("HomeViewModel", "Error when loading categories: ${response.code()}")
+                    Log.e("HomeViewModel", "Error when fetching categories: ${response.code()}")
                 }
             } catch (e: Exception) {
                 // Handle network or other exceptions

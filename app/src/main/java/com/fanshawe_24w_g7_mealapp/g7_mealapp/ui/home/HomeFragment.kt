@@ -1,6 +1,7 @@
 package com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.R
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentHomeBinding
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentSearchBinding
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Category
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.categories.CategoryAdapter
@@ -20,12 +22,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
 
-    val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,24 +34,27 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        root.isVerticalScrollBarEnabled = false
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.mealOfTheDay.observe(requireActivity()) { meal ->
-            binding.todaysSpecialImg.load(meal.strMealThumb)
-            binding.specialMealName.text = meal.strMeal
+        binding.root.isVerticalScrollBarEnabled = false
+
+        viewModel.mealOfTheDay.observe(viewLifecycleOwner) { meal ->
+            binding.imgTodaysSpecial.load(meal.strMealThumb)
+            binding.txtTodaysSpecialMealname.text = meal.strMeal
         }
 
-        viewModel.categories.observe(requireActivity()) { categories ->
-            setupCategories(container, categories)
+        viewModel.categories.observe(viewLifecycleOwner) { categories ->
+            setupCategories(  categories)
         }
 
         viewModel.getMealOfTheDay()
         viewModel.getCategories()
         setupRecentlyChecked()
 
-        return root
     }
 
     private fun setupRecentlyChecked() {
@@ -71,27 +75,27 @@ class HomeFragment : Fragment() {
             )
         )
         val adapter = RecentlyCheckedMealsAdapter(meals)
-        binding.recentlyCheckedMeals.adapter = adapter
+        binding.rvRecentlyCheckedMeals.adapter = adapter
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        binding.recentlyCheckedMeals.layoutManager = layoutManager
+        binding.rvRecentlyCheckedMeals.layoutManager = layoutManager
     }
 
-    private fun setupCategories(container: ViewGroup?, categories: List<Category>) {
+    private fun setupCategories( categories: List<Category>) {
         val adapter = CategoryAdapter(this, categories)
-        binding.mealsInCategories.adapter = adapter
-        binding.mealsInCategories.isUserInputEnabled = false
+        binding.viewpMealsInCategories.adapter = adapter
+        binding.viewpMealsInCategories.isUserInputEnabled = false
 
 
-        TabLayoutMediator(binding.tabCategories, binding.mealsInCategories) { tab, position ->
+        TabLayoutMediator(binding.tabCategories, binding.viewpMealsInCategories) { tab, position ->
             tab.text = categories[position].strCategory
         }.attach()
 
         for (i in 0..categories.size) {
             val textView =
                 LayoutInflater.from(requireContext())
-                    .inflate(R.layout.tab_title, container, false) as TextView
+                    .inflate(R.layout.tab_title, null, false) as TextView
             binding.tabCategories.getTabAt(i)?.customView = textView
         }
     }

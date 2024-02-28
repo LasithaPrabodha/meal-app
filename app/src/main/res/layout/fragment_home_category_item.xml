@@ -6,15 +6,13 @@
     android:padding="6dp">
 
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
+        style="@style/Theme.G7_MealApp.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:orientation="vertical"
-        app:cardBackgroundColor="@color/grey"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,7 +25,7 @@
             android:paddingBottom="20dp">
 
             <TextView
-                android:id="@+id/catItemTitle"
+                android:id="@+id/txt_meal_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -61,16 +59,17 @@
             </LinearLayout>
 
         </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/categoryItemImage"
+        android:id="@+id/img_category_meal"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-50dp"
         android:contentDescription="@string/todays_special"
         android:elevation="8dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/card"
