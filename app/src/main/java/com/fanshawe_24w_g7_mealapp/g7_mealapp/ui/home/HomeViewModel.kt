@@ -9,6 +9,7 @@ import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Category
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.entities.RecentlyCheckedMeal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.repositories.RCMealsRepository
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.repositories.MealRepository
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val service: MealService,
+    private val mealsRepository: MealRepository,
     private val rcMealsRepository: RCMealsRepository
 ) : ViewModel() {
 
@@ -34,7 +35,7 @@ class HomeViewModel @Inject constructor(
             if (_mealOfTheDay.value != null) return@launch
 
             try {
-                val response = service.getRandomMeal()
+                val response = mealsRepository.getRandomMeal()
                 if (response.isSuccessful) {
                     _mealOfTheDay.value = response.body()?.meals?.first()
                 } else {
@@ -62,7 +63,7 @@ class HomeViewModel @Inject constructor(
     fun getCategories() {
         viewModelScope.launch {
             try {
-                val response = service.getCategories()
+                val response = mealsRepository.getCategories()
                 if (response.isSuccessful) {
                     _categories.value = response.body()?.categories ?: emptyList<Category>()
                 } else {

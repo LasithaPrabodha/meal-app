@@ -10,6 +10,7 @@ import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealResponse
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.entities.RecentlyCheckedMeal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.repositories.RCMealsRepository
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.repositories.MealRepository
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val service: MealService,
+    private val repository: MealRepository,
 ) : ViewModel() {
 
     private val mutableMealsLiveData = MutableLiveData<MealState>()
@@ -34,7 +35,7 @@ class SearchViewModel @Inject constructor(
             try {
 
                 updateState(MealState.Loading(true))
-                val response = service.searchMeals(searchText)
+                val response = repository.searchMeals(searchText)
                 if (response.isSuccessful) {
                     if (response.body() == null) {
                         Log.e("Search", "e.toString()")

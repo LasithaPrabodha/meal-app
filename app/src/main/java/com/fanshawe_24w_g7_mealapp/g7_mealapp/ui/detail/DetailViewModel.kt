@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealDetail
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.entities.RecentlyCheckedMeal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.repositories.RCMealsRepository
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.repositories.MealRepository
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val service: MealService,
+    private val mealsRepository: MealRepository,
     private val rcMealsRepository: RCMealsRepository
 ) : ViewModel() {
     private var detailState: MutableLiveData<MealDetail?> = MutableLiveData<MealDetail?>()
@@ -36,7 +37,7 @@ class DetailViewModel @Inject constructor(
 
     fun getDetailFromServer(mealId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = service.getMealDetail(mealId)
+            val response = mealsRepository.getMealDetail(mealId)
             if (response.isSuccessful) {
                 val mealDetail = response.body()?.meals?.first()
                 detailState.postValue(mealDetail)
