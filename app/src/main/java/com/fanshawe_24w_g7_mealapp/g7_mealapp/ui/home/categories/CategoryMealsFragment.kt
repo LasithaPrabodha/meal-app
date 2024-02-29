@@ -52,38 +52,31 @@ class CategoryMealsFragment : Fragment(), MealItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        category?.let {
-            viewModel.loadItemInCategory(it.strCategory)
-        }
 
-        observeMealsResult()
+        lifecycleScope.launch {
+            observeMealsResult()
+        }
     }
 
-    private fun observeMealsResult() {
+    private suspend fun observeMealsResult() {
 
-        viewModel.categoryMealsLiveData.observe(viewLifecycleOwner) {
-            when (it) {
-                is CategoryMealsViewModel.CategoryState.Success -> {
-                    val adapter = CategoryMealsAdapter(it.data, this)
+        category?.let {
 
+            val recyclerDataArrayList = viewModel.loadItemInCategory(it.strCategory)
 
-                    val layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            recyclerDataArrayList?.let { meals ->
 
+                val adapter = CategoryMealsAdapter(meals, this)
 
-                    binding.root.layoutManager = layoutManager
-                    binding.root.adapter = adapter
-                }
-
-                is CategoryMealsViewModel.CategoryState.Error -> {
-
-                }
-                is CategoryMealsViewModel.CategoryState.Loading -> {
+                val layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
 
-                }
+                binding.root.layoutManager = layoutManager
+                binding.root.adapter = adapter
             }
         }
+
     }
 
 
@@ -100,7 +93,11 @@ class CategoryMealsFragment : Fragment(), MealItemClickListener {
     }
 
     override fun onItemClick(meal: Meal) {
-        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(meal.idMeal))
+        findNavController().navigate(
+            HomeFragmentDirections.actionNavigationHomeToDetailFragment(
+                meal.idMeal
+            )
+        )
     }
 
 }

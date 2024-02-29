@@ -17,50 +17,33 @@ class CategoryMealsViewModel @Inject constructor(
     private val service: MealService
 ) : ViewModel() {
 
-    private val mutableCategoryMealsLiveData =
-        MutableLiveData<CategoryMealsViewModel.CategoryState>()
-    val categoryMealsLiveData: LiveData<CategoryMealsViewModel.CategoryState> =
-        mutableCategoryMealsLiveData
+    private val _categoryMeals = HashMap<String, List<Meal>?>()
 
-    sealed class CategoryState {
-        class Success(val data: List<Meal>) : CategoryState()
-        class Error(val throwable: Throwable) : CategoryState()
-        class Loading(val isLoading: Boolean) : CategoryState()
-    }
-
-
-    fun loadItemInCategory(categoryName: String) {
-        viewModelScope.launch {
-            updateState(CategoryState.Loading(true))
-            try {
-
-                val response = service.getCategoryMeals(categoryName)
-                if (response.isSuccessful) {
-                    val result = response.body()?.meals ?: emptyList()
-
-                    updateState(CategoryState.Success(result))
-                } else {
-                    // Handle error
-                    Log.e(
-                        "CategoryItemsViewModel",
-                        "Error when fetching meals for ${categoryName}: ${response.code()}"
-                    )
-                }
-
-                updateState(CategoryState.Loading(false))
-            } catch (e: Exception) {
-                // Handle network or other exceptions
+    suspend fun loadItemInCategory(categoryName: String): List<Meal>? {
+        _categoryMeals[categoryName]?.let {
+            return _categoryMeals[categoryName]
+        }
+        try {
+            val response = service.getCategoryMeals(categoryName)
+            return if (response.isSuccessful) {
+                _categoryMeals[categoryName] = response.body()?.meals?.toList()
+                _categoryMeals[categoryName]
+            } else {
+                // Handle error
                 Log.e(
                     "CategoryItemsViewModel",
-                    "Exception when loading meals for ${categoryName}: ${e.message}"
+                    "Error when loading meals for ${categoryName}: ${response.code()}"
                 )
-                updateState(CategoryState.Error(e))
+                null
             }
+        } catch (e: Exception) {
+            // Handle network or other exceptions
+            Log.e(
+                "CategoryItemsViewModel",
+                "Exception when loading meals for ${categoryName}: ${e.message}"
+            )
+
+            return null
         }
-
-    }
-
-    private fun updateState(state: CategoryState) {
-        mutableCategoryMealsLiveData.value = state
     }
 }
