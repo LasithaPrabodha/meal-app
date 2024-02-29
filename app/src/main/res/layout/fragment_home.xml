@@ -88,6 +88,7 @@
             app:tabRippleColor="@null" />
 
         <androidx.viewpager2.widget.ViewPager2
+            android:minHeight="230dp"
             android:id="@+id/viewp_meals_in_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

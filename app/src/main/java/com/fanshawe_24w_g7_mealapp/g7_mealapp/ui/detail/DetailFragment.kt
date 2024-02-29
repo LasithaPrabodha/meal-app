@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.MainActivity
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentDetailBinding
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.LoadingDialog
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.getIngredients
 import kotlinx.coroutines.launch
 import javax.annotation.Nullable
@@ -27,6 +28,7 @@ class DetailFragment : Fragment() {
     private val viewModel: DetailViewModel by activityViewModels()
     private val args: DetailFragmentArgs by navArgs()
 
+    private lateinit var loader: LoadingDialog
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,16 +44,15 @@ class DetailFragment : Fragment() {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = ""
+        loader = LoadingDialog(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        loader.show()
         viewModel.getDetailFromServer(args.mealId)
-
-
 
         addSubscriptions()
 
@@ -60,6 +61,8 @@ class DetailFragment : Fragment() {
     private fun addSubscriptions() {
         viewModel.onDetailState.observe(viewLifecycleOwner) { detailMeal ->
             if (detailMeal != null) {
+
+                if(loader.isShowing) loader.hide()
 
                 lifecycleScope.launch {
                     viewModel.insertRcMeal(detailMeal)

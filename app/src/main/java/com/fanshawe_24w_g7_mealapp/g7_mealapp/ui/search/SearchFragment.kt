@@ -159,7 +159,4 @@ class SearchFragment : Fragment(), MealItemClickListener {
         )
     }
 
-    override fun onFavouriteClick(meal: Meal) {
-        // add to favourites
-    }
 }

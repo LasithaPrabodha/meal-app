@@ -103,7 +103,4 @@ class CategoryMealsFragment : Fragment(), MealItemClickListener {
         findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(meal.idMeal))
     }
 
-    override fun onFavouriteClick(meal: Meal) {
-        TODO("Not yet implemented")
-    }
 }

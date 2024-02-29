@@ -7,5 +7,4 @@ interface MealItemClickListener {
 
     fun onItemClick(meal: Meal)
 
-    fun onFavouriteClick(meal: Meal)
 }

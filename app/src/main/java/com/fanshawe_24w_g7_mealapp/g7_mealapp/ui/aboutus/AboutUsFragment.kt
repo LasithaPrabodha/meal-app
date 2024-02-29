@@ -22,16 +22,10 @@ class AboutUsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(AboutUsViewModel::class.java)
 
         _binding = FragmentAboutBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 

@@ -22,6 +22,7 @@ import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.MealItemClickListener
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.categories.CategoryAdapter
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.recently_checked.RecentlyCheckedMealsAdapter
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.LoadingDialog
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.hide
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
@@ -36,10 +37,12 @@ class HomeFragment : Fragment(), FragmentManager.OnBackStackChangedListener, Mea
 
     private val binding get() = _binding!!
 
+    private lateinit var loader: LoadingDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        activity?.supportFragmentManager?.addOnBackStackChangedListener(this);
+        activity?.supportFragmentManager?.addOnBackStackChangedListener(this)
+        loader = LoadingDialog(requireContext())
     }
 
     override fun onCreateView(
@@ -60,7 +63,7 @@ class HomeFragment : Fragment(), FragmentManager.OnBackStackChangedListener, Mea
             binding.imgTodaysSpecial.load(meal.strMealThumb)
             binding.txtTodaysSpecialMealname.text = meal.strMeal
         }
-
+        loader.show()
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
             setupCategories(categories)
         }
@@ -84,6 +87,11 @@ class HomeFragment : Fragment(), FragmentManager.OnBackStackChangedListener, Mea
             }
         }
 
+        binding.cardTodaysSpecial.setOnClickListener {
+            viewModel.mealOfTheDay.value?.let {
+                onItemClick(it)
+            }
+        }
     }
 
     private suspend fun setupRecentlyChecked() {
@@ -118,6 +126,8 @@ class HomeFragment : Fragment(), FragmentManager.OnBackStackChangedListener, Mea
                     .inflate(R.layout.tab_title, null, false) as TextView
             binding.tabCategories.getTabAt(i)?.customView = textView
         }
+
+        loader.hide()
     }
 
     override fun onDestroyView() {
@@ -141,7 +151,5 @@ class HomeFragment : Fragment(), FragmentManager.OnBackStackChangedListener, Mea
         )
     }
 
-    override fun onFavouriteClick(meal: Meal) {
-    }
 
 }
