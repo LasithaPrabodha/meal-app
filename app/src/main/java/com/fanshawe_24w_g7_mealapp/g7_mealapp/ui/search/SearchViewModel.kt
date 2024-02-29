@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Category
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.MealResponse
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.entities.RecentlyCheckedMeal
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.repositories.RCMealsRepository
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.services.MealService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val service: MealService
+    private val service: MealService,
 ) : ViewModel() {
 
     private val mutableMealsLiveData = MutableLiveData<MealState>()
@@ -27,16 +29,18 @@ class SearchViewModel @Inject constructor(
         class Loading(val isLoading: Boolean) : MealState()
     }
 
-    fun searchMeals(searchText: String){
+    fun searchMeals(searchText: String) {
         viewModelScope.launch {
+            try {
+
                 updateState(MealState.Loading(true))
                 val response = service.searchMeals(searchText)
                 if (response.isSuccessful) {
-                    if(response.body() == null){
+                    if (response.body() == null) {
                         Log.e("Search", "e.toString()")
 
                     }
-                    val result =  response.body()?.meals ?: emptyList<Meal>()
+                    val result = response.body()?.meals ?: emptyList<Meal>()
 
                     updateState(MealState.Success(result))
                 } else {
@@ -45,9 +49,21 @@ class SearchViewModel @Inject constructor(
                 }
 
                 updateState(MealState.Loading(false))
+            } catch (e: Exception) {
+                // Handle network or other exceptions
+                Log.e(
+                    "SearchViewModel",
+                    "Exception when loading meals for ${searchText}: ${e.message}"
+                )
+
+                updateState(MealState.Error(e))
+            }
 
         }
     }
+
+
+
     private fun updateState(state: MealState) {
         mutableMealsLiveData.value = state
     }

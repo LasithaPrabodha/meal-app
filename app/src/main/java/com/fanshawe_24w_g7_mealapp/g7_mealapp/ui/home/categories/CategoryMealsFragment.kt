@@ -12,11 +12,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentCategoryItemsBinding
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Category
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.MealItemClickListener
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.HomeFragmentDirections
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.search.SearchViewModel
 import kotlinx.coroutines.launch
 
 
-class CategoryMealsFragment : Fragment() {
+class CategoryMealsFragment : Fragment(), MealItemClickListener {
     private val viewModel: CategoryMealsViewModel by activityViewModels()
     private var category: Category? = null
 
@@ -42,19 +45,27 @@ class CategoryMealsFragment : Fragment() {
 
         _binding = FragmentCategoryItemsBinding.inflate(inflater, container, false)
 
-        lifecycleScope.launch {
-            category?.let {
+        binding.root.isVerticalScrollBarEnabled = false
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-                val recyclerDataArrayList = viewModel.loadItemInCategory(it.strCategory)
+        category?.let {
+            viewModel.loadItemInCategory(it.strCategory)
+        }
 
-                recyclerDataArrayList?.let {meals->
+        observeMealsResult()
+    }
 
-                    val adapter = CategoryMealsAdapter(meals)
+    private fun observeMealsResult() {
 
-                    adapter.setOnclickListener { clickedMeal ->
-                        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(clickedMeal.idMeal))
-                    }
+        viewModel.categoryMealsLiveData.observe(viewLifecycleOwner) {
+            when (it) {
+                is CategoryMealsViewModel.CategoryState.Success -> {
+                    val adapter = CategoryMealsAdapter(it.data, this)
+
 
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -63,18 +74,18 @@ class CategoryMealsFragment : Fragment() {
                     binding.root.layoutManager = layoutManager
                     binding.root.adapter = adapter
                 }
+
+                is CategoryMealsViewModel.CategoryState.Error -> {
+
+                }
+                is CategoryMealsViewModel.CategoryState.Loading -> {
+
+
+                }
             }
         }
-
-
-        binding.root.isVerticalScrollBarEnabled = false
-        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
 
     companion object {
         private const val CATEGORY = "category"
@@ -86,5 +97,13 @@ class CategoryMealsFragment : Fragment() {
                     putParcelable(CATEGORY, category);
                 }
             }
+    }
+
+    override fun onItemClick(meal: Meal) {
+        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToDetailFragment(meal.idMeal))
+    }
+
+    override fun onFavouriteClick(meal: Meal) {
+        TODO("Not yet implemented")
     }
 }

@@ -10,14 +10,20 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.R
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentSearchBinding
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.MealItemClickListener
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.HomeFragmentDirections
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.home.recently_checked.RecentlyCheckedMealsAdapter
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.hide
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.hideKeyboard
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.show
+import kotlinx.coroutines.launch
 
 
 class SearchFragment : Fragment(), MealItemClickListener {
@@ -41,8 +47,41 @@ class SearchFragment : Fragment(), MealItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecentlyChecked()
+        setupSearchResulta()
 
+
+
+        setupTextEditorListener()
+        observeResult()
+
+    }
+
+    private fun observeResult() {
+        viewModel.mealsLiveData.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is SearchViewModel.MealState.Success -> {
+                    mealsList.addAll(it.data)
+                    if (mealsList.isEmpty()) {
+                        onEmptySearchResult(true, binding.searchView.text.toString())
+                    }
+                    searchAdapter.updateList(it.data.toMutableList())
+                }
+
+                is SearchViewModel.MealState.Loading -> {
+                    if (it.isLoading) onEmptySearchResult(false)
+                    onProgress(it.isLoading)
+                }
+
+                is SearchViewModel.MealState.Error -> {
+                    onEmptySearchResult(true, it.throwable.message.toString(), isError = true)
+                    onProgress(false)
+                }
+            }
+        }
+    }
+
+    private fun setupTextEditorListener() {
         binding.searchView.editText.setOnEditorActionListener { _, _, _ ->
             cleanUpSearch()
             val text = binding.searchView.text.toString()
@@ -71,31 +110,6 @@ class SearchFragment : Fragment(), MealItemClickListener {
             }
         }
 
-
-        viewModel.mealsLiveData.observe(viewLifecycleOwner) {
-
-            Log.e("Search", it.toString())
-            when (it) {
-                is SearchViewModel.MealState.Success -> {
-                    mealsList.addAll(it.data)
-                    if (mealsList.isEmpty()) {
-                        onEmptySearchResult(true, binding.searchView.text.toString())
-                    }
-                    searchAdapter.updateList(it.data.toMutableList())
-                }
-
-                is SearchViewModel.MealState.Loading -> {
-                    Log.e("Search", it.isLoading.toString())
-                    if (it.isLoading) onEmptySearchResult(false)
-                    onProgress(it.isLoading)
-                }
-
-                is SearchViewModel.MealState.Error -> {
-                    onEmptySearchResult(true, it.throwable.message.toString(), isError = true)
-                    onProgress(false)
-                }
-            }
-        }
     }
 
 
@@ -124,7 +138,7 @@ class SearchFragment : Fragment(), MealItemClickListener {
         )
     }
 
-    private fun setupRecentlyChecked() {
+    private fun setupSearchResulta() {
         searchAdapter = SearchResultsAdapter(mealsList, this)
         binding.rvSearchResults.adapter = searchAdapter
         binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
@@ -138,7 +152,11 @@ class SearchFragment : Fragment(), MealItemClickListener {
     }
 
     override fun onItemClick(meal: Meal) {
-        // navigate to details page
+        findNavController().navigate(
+            SearchFragmentDirections.actionNavigationSearchToDetailFragment(
+                meal.idMeal
+            )
+        )
     }
 
     override fun onFavouriteClick(meal: Meal) {

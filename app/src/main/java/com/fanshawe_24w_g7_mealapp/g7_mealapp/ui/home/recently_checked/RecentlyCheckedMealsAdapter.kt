@@ -8,46 +8,49 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.R
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.FragmentHomeCategoryItemBinding
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.RecentlyCheckedMealBinding
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.models.Meal
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.persistance.entities.RecentlyCheckedMeal
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.ui.MealItemClickListener
+import com.fanshawe_24w_g7_mealapp.g7_mealapp.util.toMeal
 
-class RecentlyCheckedMealsAdapter(private val dataSet: Array<Meal>) :
+class RecentlyCheckedMealsAdapter(
+    private val dataSet: List<RecentlyCheckedMeal>,
+    private val listener: MealItemClickListener
+) :
     RecyclerView.Adapter<RecentlyCheckedMealsAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView
-        val image: ImageView
+    inner class ViewHolder(
+        private val item: RecentlyCheckedMealBinding,
+        private val listener: MealItemClickListener
 
-        init {
-            title = view.findViewById(R.id.recentlyCheckedMealTitle)
-            image = view.findViewById(R.id.recentlyCheckedMealImg)
+    ) : RecyclerView.ViewHolder(item.root) {
 
-            view.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onItemClickListener?.invoke(dataSet[position])
-                }
-            }
+        fun bind(rcMeal: RecentlyCheckedMeal) {
+            item.txtRecentlyChecked.text = rcMeal.strMeal
+            item.imgRecentlyChecked.load(rcMeal.strMealThumb)
+
+            item.root.setOnClickListener { listener.onItemClick(rcMeal.toMeal()) }
         }
+
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.recently_checked_meal, viewGroup, false)
+        val binding = RecentlyCheckedMealBinding.inflate(
+            LayoutInflater.from(viewGroup.context),
+            viewGroup,
+            false
+        )
 
-        return ViewHolder(view)
+        return ViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.title.text = dataSet[position].strMeal
-        viewHolder.image.load(dataSet[position].strMealThumb)
+        viewHolder.bind(dataSet[position])
     }
 
     override fun getItemCount() = dataSet.size
 
-    private var onItemClickListener: ((Meal) -> Unit)? = null
-
-    fun setOnclickListener(listener: (Meal) -> Unit){
-        onItemClickListener = listener
-    }
 
 }

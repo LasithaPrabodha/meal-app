@@ -26,4 +26,5 @@
     <string name="quantity">Quantity</string>
     <string name="category">Category</string>
     <string name="area">Area</string>
+    <string name="clear">Clear</string>
 </resources>

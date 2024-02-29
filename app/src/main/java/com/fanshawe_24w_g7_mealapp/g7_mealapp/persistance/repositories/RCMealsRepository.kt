@@ -9,7 +9,12 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RCMealsRepository @Inject constructor(private val rcDao: RecentlyCheckedDao) {
-    val getList: Flow<List<RecentlyCheckedMeal>> = rcDao.getAll()
+
+    @WorkerThread
+    suspend fun getList() = withContext(Dispatchers.IO) {
+        rcDao.getAll()
+    }
+
 
     @WorkerThread
     suspend fun insert(rcMeal: RecentlyCheckedMeal) = withContext(Dispatchers.IO) {
@@ -17,7 +22,7 @@ class RCMealsRepository @Inject constructor(private val rcDao: RecentlyCheckedDa
     }
 
     @WorkerThread
-    suspend fun delete(rcMeal: RecentlyCheckedMeal) = withContext(Dispatchers.IO){
-        rcDao.delete(rcMeal)
+    suspend fun deleteAll() = withContext(Dispatchers.IO){
+        rcDao.deleteAll()
     }
 }

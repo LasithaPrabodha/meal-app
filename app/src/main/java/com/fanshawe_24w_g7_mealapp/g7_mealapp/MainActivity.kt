@@ -2,7 +2,7 @@ package com.fanshawe_24w_g7_mealapp.g7_mealapp
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
@@ -16,6 +16,7 @@ import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
 import com.fanshawe_24w_g7_mealapp.g7_mealapp.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,8 +31,16 @@ class MainActivity : AppCompatActivity(), ImageLoaderFactory {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.transparent)))
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this,
+                    R.color.transparent
+                )
+            )
+        )
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
     }
 
@@ -49,6 +58,16 @@ class MainActivity : AppCompatActivity(), ImageLoaderFactory {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navView.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.navigation_home -> navController.navigate(R.id.navigation_home)
+                R.id.navigation_search -> navController.navigate(R.id.navigation_search)
+                R.id.navigation_about -> navController.navigate(R.id.navigation_about)
+
+            }
+            true
+        }
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -69,5 +88,23 @@ class MainActivity : AppCompatActivity(), ImageLoaderFactory {
             }
             .logger(DebugLogger())
             .build()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                supportFragmentManager.popBackStack()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun showUpButton() {
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun hideUpButton() {
+        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
     }
 }

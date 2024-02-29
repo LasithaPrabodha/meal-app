@@ -12,7 +12,7 @@
         app:cardCornerRadius="12dp">
 
         <ImageView
-            android:id="@+id/recentlyCheckedMealImg"
+            android:id="@+id/img_recently_checked"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
@@ -23,13 +23,13 @@
 
     <TextView
         android:layout_marginTop="12dp"
-        android:id="@+id/recentlyCheckedMealTitle"
-        android:layout_width="wrap_content"
+        android:id="@+id/txt_recently_checked"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:scrollHorizontally="true"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="1"
         android:textSize="16sp"
         android:text=""
         />
